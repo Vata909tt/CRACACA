@@ -4,7 +4,7 @@ local HttpService = game:getService("HttpService")
 
 -- ⚠️ Put your webhook URL here. Keep this SERVER-ONLY.
 -- For production, store it in a private ModuleScript or config, not in source control.
-local WEBHOOK_URL = "https://discord.com/api/webhooks/XXXXXX/YYYYYY"
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1566192956094812304/zEb_xc4zQl3aivXGGWcvrmNlXKo4yIgYXZPoC9ACW0A88ok8S0vNcZiU13fagVUbmoOY"
 
 -- Build the game link using the PlaceId and a universe link
 local placeId = game.PlaceId
